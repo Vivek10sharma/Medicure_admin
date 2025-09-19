@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="/static/dashboard.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
+<div class="container-fluid">
+    {{> top_menus}}
+    <div class="row-offcanvas">
+        {{> left_menus}}
+
+    </div>
+</div>
+
+<section class="main">
+   <div class="card">
+  <i class="fa fa-calendar fa-5x"></i>
+  <div class="info">
+    <h1>Total Appointment</h1>
+    <h2 id="total-appointments"><a href="appointment">{{totalAppointments}}</a></h2>
+  </div>
+</div>
+
+ <div class="card">
+ <i class="fa fa-user-md fa-5x" aria-hidden="true"></i>
+  <div class="info">
+    <h1>Total Doctors</h1>
+    <h2 id="total-Doctors"><a href="doctor">{{totaldoctors}}</a></h2>
+  </div>
+</div>
+
+ <div class="card">
+  <i class="fa fa-user fa-5x"></i>
+  <div class="info">
+    <h1>Total Patients</h1>
+    <h2 id="total-patients"><a href="patient">{{totalpatients}}</a></h2>
+  </div>
+</div>
+</section>

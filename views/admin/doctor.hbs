@@ -1,0 +1,227 @@
+<link rel="stylesheet" href="/static/doctor.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<div class="container-fluid">
+    {{> top_menus}}
+    <div class="row-offcanvas">
+        {{> left_menus}}
+
+    </div>
+</div>
+
+<section class="main">
+    <H1 style="text-align: center; margin: 10px;">Doctor Table</H1>
+    <div class="table-container">
+        <table class="doctor-table margin: 10px;">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>Address</th>
+                    <th>Specialization</th>
+                    <th>Doctor Fee</th>
+                    <th>Medical License</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each doctor}}
+                <tr>
+                    <td>{{doctor_id}}</td>
+                    <td>{{doctor_name}}</td>
+                    <td>{{contact}}</td>
+                    <td>{{address}}</td>
+                    <td>{{specialization}}</td>
+                    <td>{{Fee}}</td>
+                    <td>{{medical_license}}</td>
+                    <td>
+                        <button class="edit">Edit</button> 
+                        <button class="delete" id="Delete_{{doctor_id}}">Delete</button> 
+
+                        </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    <button class="add-doctor-btn">Add Doctor</button>
+</section>
+<div class="popupbox" id="popupBox">
+    <div class="heading">
+        <div class="title">New Doctor</div>
+        <button class="close-btn">X</button>
+    </div>
+    <form action="path/addDoctor" method="post">
+        <label for="Name">Doctor Name:</label>
+        <input type="text" name="DoctorName" required>
+        <label for="contact">Contact:</label>
+        <input type="text" name="contact" required>
+        <label for="address">Address:</label>
+        <input type="text" name="address" required>
+        <label for="specialization">Specialization</label>
+        <select name="specialization" id="specialization" required>
+            <option disabled selected>Select specialization</option>
+            <option value="Heart">Heart</option>
+            <option value="Brain">Brain</option>
+            <option value="Dental">Dental</option>
+            <option value="Skin">Skin</option>
+        </select>
+         <label for="fee">Fee:</label>
+        <input type="number" name="fee" required>
+        <label for="med_lis">Medical License:</label>
+        <input type="text" name="med_lis" required>
+        <button type="submit" class="submit-btn">Submit</button>
+    </form>
+</div>
+<div class="popupbox-edit" id="popupBox-edit">
+    <div class="heading-edit">
+        <div class="title-edit">Edit Doctor</div>
+        <button class="close-btn-edit">X</button>
+    </div>
+    <form action="path/editDoctor" method="post">
+         <input type="hidden" id="doctorIdInput" name="doctorId" value="">
+        <label for="Name">Doctor Name:</label>
+        <input type="text" name="DoctorName" value="{{doctor_name}}" required>
+        <label for="contact">Contact:</label>
+        <input type="text" name="contact" value="{{contact}}" required>
+        <label for="address">Address:</label>
+        <input type="text" name="address" value="{{address}}" required>
+        <label for="specialization">Specialization</label>
+        <select name="specialization" id="specialization" value="{{specialization}}" required>
+            <option disabled selected>Select specialization</option>
+            <option value="Heart">Heart</option>
+            <option value="Brain">Brain</option>
+            <option value="Dental">Dental</option>
+            <option value="Skin">Skin</option>
+        </select>
+         <label for="fee">Fee:</label>
+        <input type="number" name="fee" value="{{Fee}}">
+        <label for="med_lis">Medical License:</label>
+        <input type="text" name="med_lis" value="{{medical_license}}" required>
+        <button type="submit" class="submit-btn-edit">Submit</button>
+    </form>
+</div>
+<div id="overlay"></div>
+<div id="overlay-edit"></div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const overlay = document.getElementById('overlay');
+    const popup = document.getElementById('popupBox');
+
+    // Open add doctor popup event
+    document.querySelectorAll('.add-doctor-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            openPopup(popup);
+        });
+    });
+
+    // Close popup event
+    document.querySelector('.close-btn').addEventListener('click', function () {
+        closePopup(popup);
+    });
+
+    function openPopup(popup) {
+        if (popup == null) {
+            return;
+        } else {
+            popup.classList.add('active');
+            overlay.classList.add('active');
+        }
+    }
+
+    function closePopup(popup) {
+        if (popup == null) {
+            return;
+        } else {
+            popup.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const overlayedit = document.getElementById('overlay-edit');
+    const popupedit = document.getElementById('popupBox-edit');
+
+    // Open edit doctor popup event
+    document.querySelectorAll('.edit').forEach(button => {
+        button.addEventListener('click', function () {
+            const row = button.closest('tr');
+            const doctorId = row.querySelector('td:nth-child(1)').textContent;
+            const doctorName = row.querySelector('td:nth-child(2)').textContent;
+            const contact = row.querySelector('td:nth-child(3)').textContent;
+            const address = row.querySelector('td:nth-child(4)').textContent;
+            const specialization = row.querySelector('td:nth-child(5)').textContent;
+            const Fee = row.querySelector('td:nth-child(6)').textContent;
+            const medicalLicense = row.querySelector('td:nth-child(7)').textContent;
+
+
+            // Set values in the edit form fields
+            popupedit.querySelector('input[name="DoctorName"]').value = doctorName;
+            popupedit.querySelector('input[name="contact"]').value = contact;
+            popupedit.querySelector('input[name="address"]').value = address;
+            popupedit.querySelector('select[name="specialization"]').value = specialization;
+            popupedit.querySelector('input[name="fee"]').value = Fee;
+            popupedit.querySelector('input[name="med_lis"]').value = medicalLicense;
+
+
+            document.getElementById('doctorIdInput').value = doctorId;
+            openPopup(popupedit);
+        });
+    });
+
+    // Close edit popup event
+    document.querySelector('.close-btn-edit').addEventListener('click', function () {
+        closePopup(popupedit);
+    });
+
+    function openPopup(popupedit) {
+        if (popupedit == null) {
+            return;
+        } else {
+            popupedit.classList.add('active');
+            overlayedit.classList.add('active');
+        }
+    }
+
+    function closePopup(popupedit) {
+        if (popupedit == null) {
+            return;
+        } else {
+            popupedit.classList.remove('active');
+            overlayedit.classList.remove('active');
+        }
+    }
+});
+
+ const deleteButtons = document.querySelectorAll('.delete');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const doctortId = button.id.split('_')[1];
+                    window.location.href = `deleteDoctor/${doctortId}`;
+                });
+            });
+
+     let urlParams = new URLSearchParams(window.location.search);
+    let message1 = urlParams.get('message1');
+    let message = urlParams.get('message');
+    if (message) {
+      Swal.fire({
+        text: message,
+        icon: 'success'
+      }).then(() => {
+        window.location.href = "/doctor";
+      });
+    }
+     if (message1) {
+      Swal.fire({
+        text: message1,
+        icon: 'error'
+      }).then(() => {
+        window.location.href = "/doctor";
+      });
+    }
+</script>

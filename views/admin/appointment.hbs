@@ -1,0 +1,165 @@
+<link rel="stylesheet" href="/static/appointment.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<div class="container-fluid">
+    {{> top_menus}}
+    <div class="row-offcanvas">
+        {{> left_menus}}
+    </div>
+</div>
+  <section class="main">
+    <H1 style="text-align: center; margin: 10px;">Appointment Table</H1>
+        <div class="table-container">
+            <table class="appointment-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Patient</th>
+                        <th>Doctor</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each appointments}}
+                    <tr>
+                        <td>{{appointment_id}}</td>
+                        <td>{{patient_name}}</td>
+                        <td>{{doctor_name}}</td>
+                        <td>{{formattedDate}}</td>
+                        <td>{{time}}</td>
+                        <td>
+                            <button class="edit" data-popup="{{@index}}" id="Update_{{appointment_id}}">Edit</button>
+                            <button id="Delete_{{appointment_id}}" class="delete">Delete</button>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <div class="popupbox" id="popupBox">
+        <div class="heading">
+            <div class="title">Select Date and Time</div>
+            <button class="close-btn">X</button>
+        </div>
+        <form action="path/updateAppointment" method="post">
+         <input type="hidden" id="appointmentIdInput" name="appointmentId" value="">
+            <label for="date">Select Date:</label>
+            <input type="date" name="updateDate" required>
+            <label for="time">Select Time:</label>
+            <input type="time" name="updateTime" required>
+            <button type="submit" class="submit-btn">Submit</button>
+        </form>
+    </div>
+    <div id="overlay"></div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const overlay = document.getElementById('overlay');
+            const popup = document.getElementById('popupBox');
+
+            // Open popup event
+            document.querySelectorAll('.edit').forEach(button => {
+                button.addEventListener('click', function () {
+                    const appointment_id = button.id.split('_')[1];
+                    document.getElementById('appointmentIdInput').value = appointment_id;
+                    openPopup(popup);
+                    
+                });
+            });
+
+           
+
+            // Close popup event
+            document.querySelector('.close-btn').addEventListener('click', function () {
+                closePopup(popup);
+            });
+
+            function openPopup(popup) {
+                if (popup == null) {
+                    return;
+                } else {
+                    popup.classList.add('active');
+                    overlay.classList.add('active');
+                }
+            }
+
+            function closePopup(popup) {
+                if (popup == null) {
+                    return;
+                } else {
+                    popup.classList.remove('active');
+                    overlay.classList.remove('active');
+                }
+            }
+
+            const deleteButtons = document.querySelectorAll('.delete');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const appointmentId = button.id.split('_')[1];
+                    window.location.href = `deleteAppointment/${appointmentId}`;
+                });
+            });
+
+            
+    let urlParams = new URLSearchParams(window.location.search);
+    let message = urlParams.get('message');
+    let message1 = urlParams.get('message1');
+
+    if (message) {
+      Swal.fire({
+        text: message,
+        icon: 'success'
+      }).then(() => {
+        window.location.href = "/appointment";
+      });
+    }
+     if (message1) {
+      Swal.fire({
+        text: message1,
+        icon: 'error'
+      }).then(() => {
+        window.location.href = "/appointment";
+      });
+    }
+        });
+
+        const dateInputs = document.querySelectorAll('input[type="date"]');
+        const timeInputs = document.querySelectorAll('input[type="time"]');
+
+        // Loop through each date input
+        dateInputs.forEach(function (dateInput, index) {
+            const timeInput = timeInputs[index];
+
+            dateInput.addEventListener('change', function () {
+                const selectedDate = new Date(dateInput.value);
+                const now = new Date();
+
+                if (selectedDate.toDateString() === now.toDateString()) {
+                    const minTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+                    timeInput.setAttribute('min', minTime);
+                } else {
+                    timeInput.setAttribute('min', '00:00');
+                }
+
+                // Disable previous dates in the date input
+                const today = new Date();
+                const yyyy = today.getFullYear();
+                let mm = today.getMonth() + 1; // Months are zero indexed
+                let dd = today.getDate();
+
+                if (mm < 10) mm = '0' + mm;
+                if (dd < 10) dd = '0' + dd;
+
+                const minDate = yyyy + '-' + mm + '-' + dd;
+                dateInput.setAttribute('min', minDate);
+            });
+
+            // Trigger the change event once to initialize the state
+            dateInput.dispatchEvent(new Event('change'));
+        });
+    </script>

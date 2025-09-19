@@ -1,0 +1,101 @@
+/* Reset styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Top menu styles */
+.navbar {
+    background: linear-gradient(to right, #4c74af, #2e348b);
+    color: #fff;
+    padding: 10px;
+    list-style: none;
+}
+
+.collapse {
+    display: flex;
+    justify-content: space-around;
+    margin-left: 100px;
+}
+
+.navbar-nav{
+    list-style: none;
+}
+
+.nav-btn{
+    display: inline-block; 
+    margin-top: 5px;
+    padding: 10px;
+    border: none;
+    text-decoration: none;
+    outline: none;
+    box-shadow: 2px 3px 2px black;
+    border-radius: 10%;
+    font-weight: bolder;
+    background-color: #008080;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+.nav-btn:hover{
+    background-color: #fff;
+    color: black;
+}
+/* Left menu styles */
+.sidebar-offcanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 220px; 
+    background: linear-gradient(to right, #4c74af, #2e348b);
+    border-right: 1px solid #dee2e6; 
+    padding-top: 20px;
+    font-family: Arial, sans-serif; 
+}
+
+.nav {
+    margin-bottom: 20px;
+}
+
+.nav-link {
+    display: block;
+    padding: 10px;
+    font-size: 16px;
+    color: #343a40; 
+    text-decoration: none;
+    color: #fff;
+    transition: background-color 0.3s ease;
+}
+
+.nav-link:hover {
+    background-color: #e9ecef;
+    color: black;
+}
+
+.nav-link.active {
+    background-color: #007bff; /* Blue background for active item */
+    color: #fff; /* White text color for active item */
+}
+
+/* Add some depth effect */
+.nav-link:not(.active):hover {
+    background-color: #d8d8d8; /* Light gray on hover */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+}
+
+/* Add indentation for nested lists */
+.sub-menu {
+    padding-left: 20px;
+}
+
+/* Strong text style */
+.nav-link strong {
+    font-weight: bold;
+}
+
+/* Adding a divider between menu items */
+.nav-item:not(:last-child) {
+    border-bottom: 1px solid #dee2e6;
+}

@@ -1,0 +1,134 @@
+<link rel="stylesheet" href="/static/patient.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+<div class="container-fluid">
+    {{> top_menus}}
+    <div class="row-offcanvas">
+        {{> left_menus}}
+
+    </div>
+</div>
+
+<section class="main">
+    <H1 style="text-align: center; margin: 10px;">Patient Table</H1>
+    <div class="table-container">
+        <table class="patient-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>Username</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each patient}}
+                <tr>
+                    <td>{{patient_id}}</td>
+                    <td>{{full_name}}</td>
+                    <td>{{phone_number}}</td>
+                    <td>{{username}}</td>
+                    <td>
+                        <button class="edit">Edit</button>
+                        <button class="delete" id="Delete_{{patient_id}}">Delete</button> 
+                        </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</section>
+<div class="popupbox" id="popupBox">
+    <div class="heading">
+        <div class="title">Edit Patient</div>
+        <button class="close-btn">X</button>
+    </div>
+    <form action="path/editPatient" method="post">
+         <input type="hidden" id="patientIdInput" name="patientId" value="">
+        <label for="Name">Patient Name:</label>
+        <input type="text" name="patientName" required>
+        <label for="contact">Contact:</label>
+        <input type="text" name="contact" required>
+        <label for="username">Username:</label>
+        <input type="text" name="username" required>
+        <button type="submit" class="submit-btn">Submit</button>
+    </form>
+</div>
+<div id="overlay"></div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const overlay = document.getElementById('overlay');
+    const popup = document.getElementById('popupBox');
+
+    // Open add doctor popup event
+    document.querySelectorAll('.edit').forEach(button => {
+        button.addEventListener('click', function () {
+            const row = button.closest('tr');
+            const patientId = row.querySelector('td:nth-child(1)').textContent;
+            const patientName = row.querySelector('td:nth-child(2)').textContent;
+            const contact = row.querySelector('td:nth-child(3)').textContent;
+            const userName = row.querySelector('td:nth-child(4)').textContent;
+
+            popup.querySelector('input[name="patientName"]').value = patientName;
+            popup.querySelector('input[name="contact"]').value = contact;
+            popup.querySelector('input[name="username"]').value = userName;
+            
+            document.getElementById('patientIdInput').value = patientId;
+            openPopup(popup);
+        });
+    });
+
+    // Close popup event
+    document.querySelector('.close-btn').addEventListener('click', function () {
+        closePopup(popup);
+    });
+
+    function openPopup(popup) {
+        if (popup == null) {
+            return;
+        } else {
+            popup.classList.add('active');
+            overlay.classList.add('active');
+        }
+    }
+
+    function closePopup(popup) {
+        if (popup == null) {
+            return;
+        } else {
+            popup.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+    }
+});
+
+const deleteButtons = document.querySelectorAll('.delete');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const patientId = button.id.split('_')[1];
+                    window.location.href = `deletePatient/${patientId}`;
+                });
+            });
+ let urlParams = new URLSearchParams(window.location.search);
+    let message = urlParams.get('message');
+    let message1 = urlParams.get('message1');
+    if (message) {
+      Swal.fire({
+        text: message,
+        icon: 'success'
+      }).then(() => {
+        window.location.href = "/patient";
+      });
+    }
+     if (message1) {
+      Swal.fire({
+        text: message1,
+        icon: 'error'
+      })/*.then(() => {
+        window.location.href = "/patient";
+      });*/
+    }
+</script>

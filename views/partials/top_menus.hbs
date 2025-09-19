@@ -1,0 +1,37 @@
+<link rel="stylesheet" href="/static/menu.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
+
+<nav class="navbar"> 
+    <div class="navbar-collapse collapse" id="collapsingNavbar">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <h2 class="nav-text">MediCure: Doctor Booking System</h2>
+            </li>       
+        </ul> 	  
+        <ul class="navbar-nav">
+                <li class="nav-item">
+                    <button class="nav-btn">Log Out</button></a>         
+                </li>
+        </ul>	  
+    </div>
+</nav>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    var navBtn = document.getElementsByClassName('nav-btn')[0];
+    
+    navBtn.addEventListener('click', function() {
+        Swal.fire({
+            title: 'Logout',
+            text: 'Do you want to Log Out?',
+            showCancelButton: true,
+            confirmButtonText: 'Yes',
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = "/logout";
+            }
+        });
+    });
+</script>
